@@ -1,0 +1,150 @@
+﻿@model IEnumerable<SureshKThakur.Models.Employee>
+
+@{
+    ViewBag.Title = "Index";
+}
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<head>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <!--Import jQuery before export.js-->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+
+    <!--Data Table-->
+    <script type="text/javascript" src=" https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src=" https://cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js"></script>
+
+    <!--Export table buttons-->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.24/build/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.24/build/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.2.1/js/buttons.print.min.js"></script>
+
+    <!--Export table button CSS-->
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.2.4/css/buttons.dataTables.min.css">
+
+</head>
+<h2>Index</h2>
+
+<p>
+    @*@Html.ActionLink("Create", "CreateNewEmp","Home")*@
+    <button id="CreateNew">Create New</button>
+</p>
+
+
+<table class="table" id="SK">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Address)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Salary)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Salary)
+            </td>
+            <td>
+                       
+                @Html.ActionLink("Edit", "Edit", new { id = item.EmployeeId,name=item.Name,address=item.Address,salary=item.Salary }) |
+        @Html.ActionLink("Details", "Details", new { id = item.EmployeeId }) |
+        @Html.ActionLink("Delete", "Delete", new { id = item.EmployeeId })
+            </td>
+        </tr>
+    }
+
+</table>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4 col-sm-8">
+                        <label>Name</label>
+                        <input id="txtName" type="text"/>
+                    </div>
+                    <div class="col-md-4 col-sm-8">
+                        <label>Address</label>
+                        <input id="txtAddress" type="text" />
+                    </div>
+                    <div class="col-md-4 col-sm-8">
+                        <label>Salary</label>
+                        <input id="txtSalary" type="text" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="SaveEmp()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        debugger;
+        $.noConflict();
+        $('#SK').dataTable();
+    });
+    $('#CreateNew').click(function () {
+        debugger;
+        $('#exampleModal').modal('show');
+    });
+    
+    function EditEmp(name) {
+        debugger
+        $('#txtName').val(name);
+        $('#txtAddress').val(address);
+        $('#txtSalary').val(salary);
+        $('#exampleModal').modal('show');
+    }
+    
+    function SaveEmp() {
+        debugger
+        var Name = $('#txtName').val();
+        var Address = $('#txtAddress').val();
+        var Salary = $('#txtSalary').val();
+        $.ajax({
+            url: "../../Home/SaveEmp",
+            type: 'POST',
+            data: { Name: Name, Address: Address, Salary: Salary},
+           // contentType: 'yourConentType', // ConentType that your are sending. No contentType needed if you just posting as query string parameters.
+            success: function (response) {
+                debugger;
+                if (response) {
+                    alert('Saved');
+                }
+                // do whatever you want with response
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        });
+    }
+</script>
