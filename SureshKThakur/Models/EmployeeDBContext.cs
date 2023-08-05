@@ -164,8 +164,55 @@ namespace SureshKThakur.Models
             return comObjList;
         }
 
-        
+        public List<Student> GetStudentRegistraionDetails()
+        {
+            List<Student> studentList = new List<Student>();
+            SqlConnection con = new SqlConnection(cs);
+            SqlCommand cmd = new SqlCommand("GetStudentRegistrationDetails", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            con.Open();
+            SqlDataReader dr = cmd.ExecuteReader();
+            while (dr.Read())
+            {
+                Student student = new Student();
+                student.StudentGuid =Guid.Parse(dr.GetValue(0).ToString()) ;
+                student.FirstName =  dr.GetValue(1).ToString();
+                student.MiddleName = dr.GetValue(2).ToString();
+                student.LastName = dr.GetValue(3).ToString();
+                student.DOB = dr.GetValue(4).ToString();
+                studentList.Add(student);
 
-        
+            }
+
+            con.Close();
+
+            return studentList;
+        }
+
+        public Student GetStudentRegistrationDetailsById(string StudentGuid)
+        {
+           // List<Common> comObjList = new List<Common>();
+            SqlConnection con = new SqlConnection(cs);
+            SqlCommand cmd = new SqlCommand("GetStudentRegistrationDetailsById", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@StudentGuid", StudentGuid));
+            con.Open();
+            SqlDataReader dr = cmd.ExecuteReader();
+            Student student = new Student();
+            while (dr.Read())
+            {
+               
+                student.StudentGuid = Guid.Parse(dr.GetValue(0).ToString());
+                student.FirstName = dr.GetValue(1).ToString();
+                student.MiddleName = dr.GetValue(2).ToString();
+                student.LastName = dr.GetValue(3).ToString();
+                student.DOB = dr.GetValue(4).ToString();
+               // studentList.Add(student);
+
+            }
+            con.Close();
+            return student;
+        }
+
     }
 }

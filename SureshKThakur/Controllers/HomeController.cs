@@ -79,6 +79,22 @@ namespace SureshKThakur.Controllers
             List<Common> StateList = db.GetDistrictByState(Convert.ToInt32(StateId));
             return Json(StateList, JsonRequestBehavior.AllowGet);
         }
+        public ActionResult GetStudentRegistraionDetails()
+        {
+            EmployeeDBContext db = new EmployeeDBContext();
+            List<Student> studentList = db.GetStudentRegistraionDetails();
+            return Json(new { data = studentList }, JsonRequestBehavior.AllowGet);
+           // return Json(studentList, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult EditStudentRegistrationDetails(string StudentGuid)
+        {
+            var StudentGuidVal = StudentGuid;
+            EmployeeDBContext db = new EmployeeDBContext();
+            Student student = new Student();
+            student = db.GetStudentRegistrationDetailsById(StudentGuid);
+           // return View("NewRegistration", student);
+            return RedirectToAction("NewRegistration", "Home", new { student = student });
+        }
 
     }
 }

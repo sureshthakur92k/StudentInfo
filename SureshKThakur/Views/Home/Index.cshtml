@@ -8,25 +8,10 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
-    <!--Import jQuery before export.js-->
-    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.css" />
 
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.js"></script>
 
-    <!--Data Table-->
-    <script type="text/javascript" src=" https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src=" https://cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js"></script>
-
-    <!--Export table buttons-->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
-    <script type="text/javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.24/build/pdfmake.min.js"></script>
-    <script type="text/javascript" src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.24/build/vfs_fonts.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.html5.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.2.1/js/buttons.print.min.js"></script>
-
-    <!--Export table button CSS-->
-
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.2.4/css/buttons.dataTables.min.css">
 
 </head>
 <h2>Index</h2>
@@ -35,9 +20,20 @@
     @*@Html.ActionLink("Create", "CreateNewEmp","Home")*@
     <button id="CreateNew">Create New</button>
 </p>
+<table id="tbl_StudentDetails" class="display nowrap" style="width:100%">
+    <thead>
+        <tr>
+            <th>Guid</th>
+            <th>First Name</th>
+            <th>Middle Name</th>
+            <th>Last Name</th>
+            <th>DOB</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+</table>
 
-
-<table class="table" id="SK">
+@*<table class="table" id="SK" >
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.Name)
@@ -72,7 +68,7 @@
         </tr>
     }
 
-</table>
+</table>*@
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -110,7 +106,7 @@
     $(document).ready(function () {
         debugger;
         $.noConflict();
-        $('#SK').dataTable();
+        BindStudentDetails();
     });
     $('#CreateNew').click(function () {
         debugger;
@@ -146,5 +142,97 @@
                 console.log(error)
             }
         });
+    }
+    function BindStudentDetails() {
+        debugger;
+        $("#tbl_StudentDetails").DataTable({
+
+           // "processing": true, // for show progress bar  
+          //  "serverSide": true, // for process server side  
+           // "filter": true, // this is for disable filter (search box)  
+           // "orderMulti": false, // for disable multiple column at once  
+          //  "pageLength": 5,
+
+            "ajax": {
+                "url": "../../Home/GetStudentRegistraionDetails",
+                "type": "POST",
+                "datatype": "json"
+            },
+
+            "columnDefs":
+                [
+                    {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false
+                }
+                //{
+                //    "targets": [7],
+                //    "searchable": false,
+                //    "orderable": false
+                //},
+                //{
+                //    "targets": [8],
+                //    "searchable": false,
+                //    "orderable": false
+                //},
+                //{
+                //    "targets": [9],
+                //    "searchable": false,
+                //    "orderable": false
+                //    }
+                ],
+
+            "columns": [
+                { "data": "StudentGuid" },
+                { "data": "FirstName" },
+                { "data": "MiddleName"},
+                { "data": "LastName" },
+                { "data": "DOB" },
+                //{ "data": "City", "name": "City", "autoWidth": true },
+                //{ "data": "PostalCode", "name": "PostalCode", "autoWidth": true },
+                //{ "data": "Country", "name": "Country", "autoWidth": true },
+                //{ "data": "Phone", "name": "Phone", "title": "Status", "autoWidth": true },
+                {
+                    "render": function (data, type, full, meta)
+                    {
+                        /* return '<a class="btn btn-info" href="/Demo/Edit/' + full.StudentGuid + '">Edit</a> <a class="btn btn-info" href="/Demo/Edit/' + full.CustomerID + '">Delete</a>';*/
+                        return "<a href='#' class='btn btn-info' onclick=EditStudentDetails('" + full.StudentGuid + "'); >Edit</a> <a href='#' class='btn btn-info' onclick=DeleteStudent('" + full.StudentGuid + "'); >Delete</a>";
+
+                    }
+                },
+
+                //{
+                //    data: null, render: function (data, type, row) {
+                //        return "<a href='#' class='btn btn-danger' onclick=DeleteData('" + row.CustomerID + "'); >Delete</a>";
+                //    }
+                //},
+
+            ]
+
+        });
+    }
+    function EditStudentDetails(StudentGuid) {
+        $.ajax({
+            url: "../../Home/EditStudentRegistrationDetails",
+            type: 'POST',
+            data: { StudentGuid: StudentGuid},
+            // contentType: 'yourConentType', // ConentType that your are sending. No contentType needed if you just posting as query string parameters.
+            success: function (response) {
+                debugger;
+                if (response) {
+                    alert('Saved');
+                }
+                window.location.href = "/Home/NewRegistration";
+                // do whatever you want with response
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        });
+
+    }
+    function DeleteStudent(StudentGuid) {
+
     }
 </script>
