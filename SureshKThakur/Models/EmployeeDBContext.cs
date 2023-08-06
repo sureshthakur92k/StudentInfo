@@ -91,6 +91,10 @@ namespace SureshKThakur.Models
                         cmd.Parameters.Add("@PolicStation", SqlDbType.VarChar).Value = student.PolicStation;
                         cmd.Parameters.Add("@PostOffice", SqlDbType.VarChar).Value = student.PostOffice;
 
+                        cmd.Parameters.Add("@IsEdit", SqlDbType.VarChar).Value = student.IsEdit;
+                        var StudentGuidVal = student.StudentGuid.ToString();
+                        cmd.Parameters.Add("@StudentGuid", SqlDbType.VarChar).Value = StudentGuidVal;
+
                         con.Open();
                         cmd.ExecuteNonQuery();
                     }
@@ -207,7 +211,20 @@ namespace SureshKThakur.Models
                 student.MiddleName = dr.GetValue(2).ToString();
                 student.LastName = dr.GetValue(3).ToString();
                 student.DOB = dr.GetValue(4).ToString();
-               // studentList.Add(student);
+                student.Gender = dr.GetValue(5).ToString();
+                student.ClassId = Convert.ToInt32(dr.GetValue(6).ToString()) ;
+                student.AdmissionDate = dr.GetValue(7).ToString();
+                student.StudentEmailId = dr.GetValue(8).ToString();
+                student.MotherName  = dr.GetValue(9).ToString();
+                student.FatherName = dr.GetValue(10).ToString();
+                student.ParentsPhoneNo = dr.GetValue(11).ToString();
+                student.Address1 = dr.GetValue(12).ToString();
+                student.Address2 = dr.GetValue(13).ToString();
+                student.StateId =Convert.ToInt32(dr.GetValue(14).ToString()) ;
+                student.DistrictId =Convert.ToInt32(dr.GetValue(15).ToString()) ;
+                student.PolicStation = dr.GetValue(16).ToString();
+                student.PostOffice = dr.GetValue(17).ToString();
+                // studentList.Add(student);
 
             }
             con.Close();

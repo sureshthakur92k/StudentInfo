@@ -25,5 +25,9 @@ namespace SureshKThakur.Models
         public string District { get; set; }
         public string PolicStation { get; set; }
         public string PostOffice { get; set; }
+        public int ClassId { get; set; }
+        public int StateId { get; set; }
+        public int DistrictId { get; set; }
+        public string IsEdit { get; set; }
     }
 }

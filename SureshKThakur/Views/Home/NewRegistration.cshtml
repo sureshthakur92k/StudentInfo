@@ -3,7 +3,7 @@
     ViewBag.Title = "NewRegistration";
 }
 <head>
-
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 </head>
 <h4>NewRegistration</h4>
@@ -108,11 +108,11 @@
                 <input type="radio" id="TransNo" name="fav_language" value="TransNo">
                 <label for="css">No</label><br>
             </div>
-            @*<div class="col-sm-12 col-md-4">
-                    <label for="exampleInputEmail1">Father Name</label>
+            <div class="col-sm-12 col-md-4">
+                    <label for="exampleInputEmail1">ANCN NO</label>
                     <input type="email" class="form-control" id="txtFatherName" aria-describedby="emailHelp" placeholder="Enter Father Name">
                 </div>
-                <div class="col-sm-12 col-md-4">
+                @*<div class="col-sm-12 col-md-4">
                     <label for="exampleInputEmail1">Parent's Phone Number</label>
                     <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Phone No">
                 </div>*@
@@ -129,11 +129,39 @@
     </form>
     <button type="submit" class="btn btn-primary" style="margin-top:10%"  onclick="SaveStudentReg()">Submit</button>
 </div>
-    <script>
-        $(document).ready(function () {
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"  onclick="BtnCloseModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label id="SaveRegistraionMsg"></label>
+            </div>
+            @*<div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="SaveEmp()">Save changes</button>
+            </div>*@
+        </div>
+    </div>
+</div>
+<script>
+    var IsEdit = "false";
+    var StudentGuidVal;
+    $(document).ready(function () {
+            
             GetStudentClassName();
             GetStateList();
             GetDistrictListByStateId(1);
+        StudentGuidVal = "@ViewBag.StudentGuidVal";
+           // alert(StudentGuidVal);
+        if (StudentGuidVal) {
+            IsEdit = "true";
+                BindStudentDetailsById(StudentGuidVal);
+            }
 
         });
         function GetStateList() {
@@ -153,12 +181,10 @@
             });
         }
         function GetStudentClassName() {
-            debugger;
             $.ajax({
                 url: "../../Home/GetStudentClassName",
                 type: 'POST',
                 success: function (response) {
-                    debugger;
                     if (response) {
                         for (const element of response) {
                             $("#ddlClass").append($("<option></option>").val(element.ClassId).html(element.ClassName));
@@ -171,15 +197,16 @@
             });
         }
         $("#ddlState").change(function () {
-            debugger;
             var StateId = this.value;
             GetDistrictListByStateId(StateId);
         });
-        function GetDistrictListByStateId(StateId) {
+    function GetDistrictListByStateId(StateId) {
+        debugger;
             $.ajax({
                 url: "../../Home/GetDistrictListByStateId",
                 type: 'POST',
                 data: { StateId: StateId },
+                async: false,
                 success: function (response) {
                     if (response) {
                         $("#ddlDistrict").empty();
@@ -194,7 +221,6 @@
             });
         }
         function SaveStudentReg() {
-            debugger
             var FirstName = $('#txtFirstName').val();
             var MiddleName = $('#txtMiddleName').val();
             var LastName = $('#txtLastName').val();
@@ -241,7 +267,9 @@
                 State: State,
                 District: District,
                 PolicStation: PolicStation,
-                PostOffice: PostOffice
+                PostOffice: PostOffice,
+                IsEdit: IsEdit,
+                StudentGuid: StudentGuidVal
             }
             $.ajax({
                 url: "../../Home/SaveStudentRegistration",
@@ -251,14 +279,63 @@
                 success: function (response) {
                     debugger;
                     if (response) {
-                        alert('Saved');
+                        if (IsEdit == "true") {
+                            $('#exampleModalLabel').text("Registraion Update Complted");
+                        }
+                        else {
+                            $('#exampleModalLabel').text("Registraion Complted");
+                        }
+                        
+                        $('#SaveRegistraionMsg').text(FirstName + " "+LastName +'  Created Successfully...');
+                        $('#exampleModal').modal('show');
                     }
-                    window.location.href = "/Home/Index/";
+                   // window.location.href = "/Home/Index/";
                     // do whatever you want with response
                 },
                 error: function (error) {
                     console.log(error)
                 }
             });
-        }
-    </script>
+    }
+    function BindStudentDetailsById(StudentGuidVal) {
+        debugger
+        $.ajax({
+            url: "../../Home/BindStudentDetailsById",
+            type: 'POST',
+            data: { StudentGuid: StudentGuidVal },
+            // contentType: 'yourConentType', // ConentType that your are sending. No contentType needed if you just posting as query string parameters.
+            success: function (data) {
+                debugger
+                GetDistrictListByStateId(data.data.StateId);
+                if (data) {
+                    debugger
+                    $('#txtFirstName').val(data.data.FirstName);
+                    $('#txtMiddleName').val(data.data.MiddleName);
+                    $('#txtLastName').val(data.data.LastName);
+                    $('#txtDOB').val(data.data.DOB);
+                    $('#ddlClass').val(data.data.ClassId);
+                    $('#ddlGender').val(data.data.Gender);
+                    $('#txtAdmissionDate').val(data.data.AdmissionDate);
+                    $('#txtStudentEmailId').val(data.data.StudentEmailId);
+                    $('#txtMotherName').val(data.data.MotherName);
+                    $('#txtFatherName').val(data.data.FatherName);
+                    $('#txtParentPhoneNumbe').val(data.data.ParentsPhoneNo);
+                    $('#txtAddress1').val(data.data.Address1);
+                    $('#txtAddress2').val(data.data.Address2);
+                    $('#ddlState').val(data.data.StateId);
+                    $('#ddlDistrict').val(data.data.DistrictId);
+                    $('#txtPoliceStation').val(data.data.PolicStation);
+                    $('#ddlPostOffice').val(data.data.PostOffice);
+                }
+              //  window.location.href = "/Home/NewRegistration?StudentGuidVal=" + StudentGuid
+                // do whatever you want with response
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        });
+    }
+    function BtnCloseModal() {
+        window.location.href = "/Home/Index/";
+    }
+</script>

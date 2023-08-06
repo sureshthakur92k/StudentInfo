@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.css" />
 
     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.js"></script>
-
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 </head>
 <h2>Index</h2>
@@ -74,7 +74,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="BtnCloseModal()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -107,6 +107,7 @@
         debugger;
         $.noConflict();
         BindStudentDetails();
+       
     });
     $('#CreateNew').click(function () {
         debugger;
@@ -221,9 +222,9 @@
             success: function (response) {
                 debugger;
                 if (response) {
-                    alert('Saved');
+                  //  alert('Saved');
                 }
-                window.location.href = "/Home/NewRegistration";
+                window.location.href = "/Home/NewRegistration?StudentGuidVal=" + StudentGuid
                 // do whatever you want with response
             },
             error: function (error) {
@@ -234,5 +235,8 @@
     }
     function DeleteStudent(StudentGuid) {
 
+    }
+    function BtnCloseModal() {
+        alert('kkk');
     }
 </script>

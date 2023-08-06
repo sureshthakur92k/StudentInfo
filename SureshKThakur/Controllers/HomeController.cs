@@ -57,8 +57,9 @@ namespace SureshKThakur.Controllers
 
             return View();
         }
-        public ActionResult NewRegistration()
+        public ActionResult NewRegistration(string StudentGuidVal)
         {
+            ViewBag.StudentGuidVal = StudentGuidVal;
             return View();
         }
         public ActionResult GetStudentClassName()
@@ -93,8 +94,18 @@ namespace SureshKThakur.Controllers
             Student student = new Student();
             student = db.GetStudentRegistrationDetailsById(StudentGuid);
            // return View("NewRegistration", student);
-            return RedirectToAction("NewRegistration", "Home", new { student = student });
+            return RedirectToAction("NewRegistration", "Home", new { StudentGuid = StudentGuidVal });
         }
+        public ActionResult BindStudentDetailsById(string StudentGuid)
+        {
+            var StudentGuidVal = StudentGuid;
+            EmployeeDBContext db = new EmployeeDBContext();
+            Student student = new Student();
+            student = db.GetStudentRegistrationDetailsById(StudentGuid);
+            // return View("NewRegistration", student);
+            return Json(new { data = student }, JsonRequestBehavior.AllowGet);
+        }
+        
 
     }
 }
