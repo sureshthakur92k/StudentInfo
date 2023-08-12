@@ -106,6 +106,26 @@ namespace SureshKThakur.Controllers
             return Json(new { data = student }, JsonRequestBehavior.AllowGet);
         }
         
+            public ActionResult DeleteStudent(string StudentGuid)
+        {
+            var StudentGuidVal = StudentGuid;
+            EmployeeDBContext db = new EmployeeDBContext();
+            Boolean Resule;
+            Resule = db.DeleteStudent(StudentGuid);
+            // return View("NewRegistration", student);
+            return Json(new { data = Resule }, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult AddStaff()
+        {
+            //var StudentGuidVal = StudentGuid;
+            //EmployeeDBContext db = new EmployeeDBContext();
+            //Student student = new Student();
+            //student = db.GetStudentRegistrationDetailsById(StudentGuid);
+            //// return View("NewRegistration", student);
+            //return Json(new { data = student }, JsonRequestBehavior.AllowGet);
+            return View();
+        }
+        
 
     }
 }

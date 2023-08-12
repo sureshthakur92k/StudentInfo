@@ -101,6 +101,28 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="DeleteStudentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="BtnCloseModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">              
+                <input type="text" id="StudentGuid" hidden/>
+                <label id="SaveRegistraionMsg">Are your want to delete: <span id="firstNameDelete"></span> </label>
+            </div>
+            <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary" onclick="ConfDeleteStudent()">Yes</button>
+                </div>
+        </div>
+    </div>
+</div>
+
+
 
 <script>
     $(document).ready(function () {
@@ -198,7 +220,7 @@
                     "render": function (data, type, full, meta)
                     {
                         /* return '<a class="btn btn-info" href="/Demo/Edit/' + full.StudentGuid + '">Edit</a> <a class="btn btn-info" href="/Demo/Edit/' + full.CustomerID + '">Delete</a>';*/
-                        return "<a href='#' class='btn btn-info' onclick=EditStudentDetails('" + full.StudentGuid + "'); >Edit</a> <a href='#' class='btn btn-info' onclick=DeleteStudent('" + full.StudentGuid + "'); >Delete</a>";
+                        return "<a href='#' class='btn btn-info' onclick=EditStudentDetails('" + full.StudentGuid + "'); >Edit</a> <a href='#' class='btn btn-info' onclick=DeleteStudent('" + full.StudentGuid + "','" + full.FirstName + "'); >Delete</a>";
 
                     }
                 },
@@ -233,10 +255,36 @@
         });
 
     }
-    function DeleteStudent(StudentGuid) {
+    function DeleteStudent(StudentGuid, FirstName) {
+        debugger;
+        $('#firstNameDelete').text(FirstName);
+        $('#StudentGuid').val(StudentGuid);
+        $('#DeleteStudentModal').modal('show');
 
     }
+   
+    function ConfDeleteStudent() {
+        var StudentGuid = $('#StudentGuid').val();
+        $.ajax({
+            url: "../../Home/DeleteStudent",
+            type: 'POST',
+            data: { StudentGuid: StudentGuid },
+            // contentType: 'yourConentType', // ConentType that your are sending. No contentType needed if you just posting as query string parameters.
+            success: function (response) {
+                debugger;
+                if (response) {
+                    BtnCloseModal();
+                }
+               // window.location.href = "/Home/NewRegistration?StudentGuidVal=" + StudentGuid
+                // do whatever you want with response
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        });
+        
+    }
     function BtnCloseModal() {
-        alert('kkk');
+        window.location.href = "/Home/Index/";
     }
 </script>

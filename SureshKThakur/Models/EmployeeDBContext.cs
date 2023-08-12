@@ -230,6 +230,28 @@ namespace SureshKThakur.Models
             con.Close();
             return student;
         }
+        public Boolean DeleteStudent(string StudentGuid)
+        {
+            Boolean IsDeleted = false;
+            try
+            {
+                // List<Common> comObjList = new List<Common>();
+                SqlConnection con = new SqlConnection(cs);
+                SqlCommand cmd = new SqlCommand("DeleteStudent", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@StudentGuid", StudentGuid));
+                con.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+                con.Close();
+                IsDeleted = true;
+            }
+            catch (Exception ex)
+            {
+                IsDeleted = false;
+            }
+            
+            return IsDeleted;
+        }
 
     }
 }

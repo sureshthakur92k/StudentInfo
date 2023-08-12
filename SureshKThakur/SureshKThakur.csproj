@@ -169,6 +169,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\CreateNewEmp.cshtml" />
     <Content Include="Views\Home\NewRegistration.cshtml" />
+    <Content Include="Views\Home\AddStaff.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
