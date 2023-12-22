@@ -29,5 +29,6 @@ namespace SureshKThakur.Models
         public int StateId { get; set; }
         public int DistrictId { get; set; }
         public string IsEdit { get; set; }
+        public string StaffRole { get; set; }
     }
 }

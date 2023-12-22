@@ -253,5 +253,91 @@ namespace SureshKThakur.Models
             return IsDeleted;
         }
 
+        #region Staff Start 
+        public List<Common> GetStaffEduction()
+        {
+            List<Common> comObjList = new List<Common>();
+            SqlConnection con = new SqlConnection(cs);
+            SqlCommand cmd = new SqlCommand("GetStaffEduction", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            con.Open();
+            SqlDataReader dr = cmd.ExecuteReader();
+            while (dr.Read())
+            {
+                Common comObj = new Common();
+                comObj.ItemId = Convert.ToInt32(dr.GetValue(0).ToString());
+                comObj.ItemName = dr.GetValue(1).ToString();
+                comObjList.Add(comObj);
+            }
+            con.Close();
+            return comObjList;
+        }
+        public List<Common> GetStaffRole()
+        {
+            List<Common> comObjList = new List<Common>();
+            SqlConnection con = new SqlConnection(cs);
+            SqlCommand cmd = new SqlCommand("GetStaffRole", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            con.Open();
+            SqlDataReader dr = cmd.ExecuteReader();
+            while (dr.Read())
+            {
+                Common comObj = new Common();
+                comObj.ItemId = Convert.ToInt32(dr.GetValue(0).ToString());
+                comObj.ItemName = dr.GetValue(1).ToString();
+                comObjList.Add(comObj);
+            }
+            con.Close();
+            return comObjList;
+        }
+
+        public bool SaveStaffRegistration(Student student)
+        {
+            bool result1 = false;
+            try
+            {
+                using (SqlConnection con = new SqlConnection(cs))
+                {
+                    using (SqlCommand cmd = new SqlCommand("SaveStaffRegistration", con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.Add("@FirstName", SqlDbType.VarChar).Value = student.FirstName;
+                        cmd.Parameters.Add("@MiddleName", SqlDbType.VarChar).Value = student.MiddleName;
+                        cmd.Parameters.Add("@LastName", SqlDbType.VarChar).Value = student.LastName;
+                        cmd.Parameters.Add("@DOB", SqlDbType.VarChar).Value = student.DOB;
+                        cmd.Parameters.Add("@Gender", SqlDbType.VarChar).Value = student.Gender;
+                        cmd.Parameters.Add("@StaffEduction", SqlDbType.VarChar).Value = student.StudentClass;
+                        cmd.Parameters.Add("@AdmissionDate", SqlDbType.VarChar).Value = student.AdmissionDate;
+                        cmd.Parameters.Add("@StaffEmailId", SqlDbType.VarChar).Value = student.StudentEmailId;
+                        cmd.Parameters.Add("@MotherName", SqlDbType.VarChar).Value = student.MotherName;
+                        cmd.Parameters.Add("@FatherName", SqlDbType.VarChar).Value = student.FatherName;
+                        cmd.Parameters.Add("@ParentsPhoneNo", SqlDbType.VarChar).Value = student.ParentsPhoneNo;
+                        cmd.Parameters.Add("@Address1", SqlDbType.VarChar).Value = student.Address1;
+                        cmd.Parameters.Add("@Address2", SqlDbType.VarChar).Value = student.Address2;
+                        cmd.Parameters.Add("@State", SqlDbType.VarChar).Value = student.State;
+                        cmd.Parameters.Add("@District", SqlDbType.VarChar).Value = student.District;
+                        cmd.Parameters.Add("@PolicStation", SqlDbType.VarChar).Value = student.PolicStation;
+                        cmd.Parameters.Add("@PostOffice", SqlDbType.VarChar).Value = student.PostOffice;
+
+                        cmd.Parameters.Add("@IsEdit", SqlDbType.VarChar).Value = student.IsEdit;
+                        var StudentGuidVal = student.StudentGuid.ToString();
+                        cmd.Parameters.Add("@StaffGuid", SqlDbType.VarChar).Value = StudentGuidVal;
+
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                result1 = true;
+            }
+            catch (Exception e)
+            {
+               
+            }
+
+            return result1;
+        }
+        #endregion Staff End
+
     }
 }

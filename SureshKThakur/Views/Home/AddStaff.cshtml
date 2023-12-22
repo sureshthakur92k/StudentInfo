@@ -2,7 +2,11 @@
 @{
     ViewBag.Title = "AddStaff";
 }
-
+<head>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="~/Scripts/Common/CommonJS.js"></script>
+</head>
 <div class="container" style="margin-left:2%">
     <form>
         <div class="form-group">
@@ -39,7 +43,7 @@
         <div class="form-group">
             <div class="col-sm-12 col-md-4">
                 <label for="exampleInputEmail1">Higher Eduction</label>
-                <select class="form-control" name="cars" id="ddlClass">
+                <select class="form-control" name="cars" id="ddlStaffEduction">
                 </select>
             </div>
             <div class="col-sm-12 col-md-4">
@@ -98,11 +102,9 @@
         </div>
         <div class="form-group">
             <div class="col-sm-12 col-md-4">
-                <label for="exampleInputEmail1">Are you wants Transpotation </label></br>
-                <input type="radio" id="TransYes" name="fav_language" value="TransYes">
-                <label for="html">Yes</label><br>
-                <input type="radio" id="TransNo" name="fav_language" value="TransNo">
-                <label for="css">No</label><br>
+                <label for="exampleInputEmail1">Staff Role</label>
+                <select class="form-control" name="cars" id="ddlStaffRole">
+                </select>
             </div>
             <div class="col-sm-12 col-md-4">
                 <label for="exampleInputEmail1">FANCN NO</label>
@@ -123,6 +125,103 @@
             </div>*@
 
     </form>
-    <button type="submit" class="btn btn-primary" style="margin-top:10%" onclick="SaveStudentReg()">Submit</button>
+    <button type="submit" class="btn btn-primary" style="margin-top:10%" onclick="SaveStaffReg()">Submit</button>
 </div>
+
+<script>
+    var IsEdit = "false";
+      $(document).ready(function () {
+            GetStateList();
+          GetDistrictListByStateId(1);
+          GetStaffEduction();
+          GetStaffRole();
+      });
+    $("#ddlState").change(function () {
+        var StateId = this.value;
+        GetDistrictListByStateId(StateId);
+    });
+    function SaveStaffReg() {
+        var FirstName = $('#txtFirstName').val();
+        var MiddleName = $('#txtMiddleName').val();
+        var LastName = $('#txtLastName').val();
+        var DOB = $('#txtDOB').val();
+        // var Gender = $('#ddlGender').val();
+        var e = document.getElementById("ddlGender");
+        var value = e.value;
+        var Gender = e.options[e.selectedIndex].text;
+        // var StudentClass = $('#ddlClass').val();
+        var e1 = document.getElementById("ddlStaffEduction");
+        var value = e1.value;
+        var StaffEduction = e1.options[e1.selectedIndex].text;
+        var AdmissionDate = $('#txtAdmissionDate').val();
+        var StudentEmailId = $('#txtStudentEmailId').val();
+        var MotherName = $('#txtMotherName').val();
+        var FatherName = $('#txtFatherName').val();
+        var ParentsPhoneNo = $('#txtParentPhoneNumbe').val();
+        var Address1 = $('#txtAddress1').val();
+        var Address2 = $('#txtAddress2').val();
+        // var State = $('#ddlState').val();
+        var e2 = document.getElementById("ddlState");
+        var value = e2.value;
+        var State = e2.options[e2.selectedIndex].text;
+       
+        // var District = $('#ddlDistrict').val();
+        var e3 = document.getElementById("ddlDistrict");
+        var value = e3.value;
+        var District = e3.options[e3.selectedIndex].text;
+
+        var e4 = document.getElementById("ddlStaffRole");
+        var value = e4.value;
+        var StaffRole = e4.options[e2.selectedIndex].text;
+        var PolicStation = $('#txtPoliceStation').val();
+        var PostOffice = $('#ddlPostOffice').val();
+        var student = {
+            FirstName: FirstName,
+            MiddleName: MiddleName,
+            LastName: LastName,
+            DOB: DOB,
+            Gender: Gender,
+            StudentClass: StaffEduction,
+            AdmissionDate: AdmissionDate,
+            StudentEmailId: StudentEmailId,
+            MotherName: MotherName,
+            FatherName: FatherName,
+            ParentsPhoneNo: ParentsPhoneNo,
+            Address1: Address1,
+            Address2: Address2,
+            State: State,
+            District: District,
+            PolicStation: PolicStation,
+            PostOffice: PostOffice,
+            IsEdit: IsEdit,
+          //  StudentGuid: StudentGuidVal,
+            StaffRole: StaffRole
+        }
+        $.ajax({
+            url: "../../Staff/SaveStaffRegistration",
+            type: 'POST',
+            data: student,
+            // contentType: 'yourConentType', // ConentType that your are sending. No contentType needed if you just posting as query string parameters.
+            success: function (response) {
+                debugger;
+                if (response) {
+                    if (IsEdit == "true") {
+                        $('#exampleModalLabel').text("Registraion Update Complted");
+                    }
+                    else {
+                        $('#exampleModalLabel').text("Registraion Complted");
+                    }
+
+                    $('#SaveRegistraionMsg').text(FirstName + " " + LastName + '  Created Successfully...');
+                    $('#exampleModal').modal('show');
+                }
+                // window.location.href = "/Home/Index/";
+                // do whatever you want with response
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        });
+    }
+</script>
 

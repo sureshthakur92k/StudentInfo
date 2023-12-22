@@ -1,0 +1,61 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<head>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="~/Scripts/Common/CommonJS.js"></script>
+</head>
+<div class="form-group">
+    <div class="col-sm-12 col-md-4">
+        <label>Search by</label>
+        <select class="form-control" name="cars" id="ddlSearchBy">
+            <option value="Name">Name</option>
+            <option value="Class">Class</option>
+            <option value="RollNo">Roll No</option>
+            <option value="Name_Roll_Number">Name & Roll Number</option>
+        </select>
+    </div>
+    <div class="col-sm-12 col-md-4">
+        <input type="text" id="txtName" placeholder="Enter Name" style=" margin-top: 25px" />
+        <input type="text" id="txtRollNumber" placeholder="Enter Roll Number" style=" margin-top: 25px" />
+
+    </div>
+    <div class="col-sm-12 col-md-4">
+        
+    </div>
+
+</div>
+<script>
+    var IsEdit = "false";
+    var StudentGuidVal;
+    $(document).ready(function () {
+        $("#txtName").hide();
+        $("#txtRollNumber").hide();
+    });
+    
+    $("#ddlSearchBy").change(function () {
+        debugger;
+        var selectedVal = this.value;
+        //if (selectedVal =="Class") {
+        //    $("#txtName").show();
+        //}
+        if (selectedVal == "Name") {
+            $("#txtName").show();
+            $("#txtRollNumber").hide();
+        }
+        if (selectedVal == "RollNo") {
+            $("#txtRollNumber").show();
+            $("#txtName").hide();
+        }
+        if (selectedVal == "Name_Roll_Number") {
+            $("#txtRollNumber").show();
+            $("#txtName").show();
+        }
+        
+    });
+    </script>
+
+
+

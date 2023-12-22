@@ -5,6 +5,7 @@
 <head>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="~/Scripts/Common/CommonJS.js"></script>
 </head>
 <h4>NewRegistration</h4>
 <div class="container" style="margin-left:2%">
@@ -102,11 +103,25 @@
         </div>
         <div class="form-group">
             <div class="col-sm-12 col-md-4">
+                @*<label for="exampleInputEmail1">Are you wants Transpotation </label></br>
+        <input type="radio" id="TransYes" name="fav_language" value="TransYes">
+        <label for="html">Yes</label><br>
+        <input type="radio" id="TransNo" name="fav_language" value="TransNo">
+        <label for="css">No</label><br>*@
                 <label for="exampleInputEmail1">Are you wants Transpotation </label></br>
-                <input type="radio" id="TransYes" name="fav_language" value="TransYes">
-                <label for="html">Yes</label><br>
-                <input type="radio" id="TransNo" name="fav_language" value="TransNo">
-                <label for="css">No</label><br>
+                <input id="yes" name="collapseGroup" type="radio" data-toggle="collapse" data-target="#collapseOne" /> Yes
+
+                <input id="no" name="collapseGroup" type="radio" data-toggle="collapse" data-target="#collapseOne" checked /> No
+
+                <div id="collapseOne" class="panel-collapse collapse">
+                    <div class="panel-body">                      
+                        <label for="exampleInputEmail1">From</label>
+                        <select class="form-control" name="cars" id="ddlGender">
+                            <option value="Male">Sakra</option>
+                            <option value="Female">Sakra Block</option>
+                        </select>
+                    </div>
+                </div>
             </div>
             <div class="col-sm-12 col-md-4">
                     <label for="exampleInputEmail1">ANCN NO</label>
@@ -164,22 +179,7 @@
             }
 
         });
-        function GetStateList() {
-            $.ajax({
-                url: "../../Home/GetStateList",
-                type: 'POST',
-                success: function (response) {
-                    if (response) {
-                        for (const element of response) {
-                            $("#ddlState").append($("<option></option>").val(element.ItemId).html(element.ItemName));
-                        }
-                    }
-                },
-                error: function (error) {
-                    console.log(error)
-                }
-            });
-        }
+      
         function GetStudentClassName() {
             $.ajax({
                 url: "../../Home/GetStudentClassName",
@@ -200,26 +200,7 @@
             var StateId = this.value;
             GetDistrictListByStateId(StateId);
         });
-    function GetDistrictListByStateId(StateId) {
-        debugger;
-            $.ajax({
-                url: "../../Home/GetDistrictListByStateId",
-                type: 'POST',
-                data: { StateId: StateId },
-                async: false,
-                success: function (response) {
-                    if (response) {
-                        $("#ddlDistrict").empty();
-                        for (const element of response) {
-                            $("#ddlDistrict").append($("<option></option>").val(element.ItemId).html(element.ItemName));
-                        }
-                    }
-                },
-                error: function (error) {
-                    console.log(error)
-                }
-            });
-        }
+    
         function SaveStudentReg() {
             var FirstName = $('#txtFirstName').val();
             var MiddleName = $('#txtMiddleName').val();
@@ -338,4 +319,19 @@
     function BtnCloseModal() {
         window.location.href = "/Home/Index/";
     }
+
+    var yesRadio = $('#yes'),
+        noRadio = $('#no');
+
+    yesRadio.click(function () {
+        if ($('#collapseOne').hasClass('in')) {
+            return false;
+        }
+    });
+
+    noRadio.click(function () {
+        if (!$('#collapseOne').hasClass('in')) {
+            return false;
+        }
+    });
 </script>
